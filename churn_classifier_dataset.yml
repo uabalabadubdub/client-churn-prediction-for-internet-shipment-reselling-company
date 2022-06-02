@@ -1,0 +1,217 @@
+version: 2
+
+models:
+- name: churn_classifier_dataset
+  description: >
+    Dataset to train and test a churn classifier model 
+  columns:
+    - name: user_id
+      description: '{{ doc("user_id") }}'
+      type: string
+      tests:
+        - unique
+        - not_null
+    - name: platform
+      description: Associated Packlink platform.
+      type: string
+    - name: market_country
+      description: Associated market country
+      type: string
+    - name: user_creation_datetime
+      description: > 
+        Date when the user was created. It exists for all platforms.
+        It's the timestamp when user has completed his first interaction 
+        in the respective platform and country. Automatically recorded
+        without user active interaction
+      type: timestamp
+    - name: confirmation_datetime
+      description: > 
+        Date where the user confirmed registration. COM platform in 
+        packlink.com doesn't have registry. Legacy COM platforms (a.k.a. 
+        Kokudo) do. WL and PRO also. User active email confirmation is 
+        needed (pending confirmation)
+      type: timestamp
+    - name: first_purchase_datetime
+      description: >
+        Datetime when client purchased his first non cancelled label. 
+        DISCLAIMER: this date is recorded from delivery notes source, 
+        this source was deployed on production since first january 2019. 
+        Data before this date is not available right now!
+      type: datetime
+    - name: last_purchase_datetime
+      description: >
+        Datetime when client purchased his last non cancelled label. 
+        DISCLAIMER: this date is recorded from delivery notes source, 
+        this source was deployed on production since first january 2019. 
+        Data before this date is not available right now!
+      type: datetime
+    - name: first_integration_datetime
+      description: >
+        Datetime when client purchased his first non cancelled label 
+        through an integration. DISCLAIMER: this date is recorded 
+        from delivery notes source, this source was on production 
+        since first january 2019. Data before this date is not available 
+        right now!
+      type: datetime
+    - name: last_segment_recorded
+      description: > 
+        User size calculed according to user's 30 days activity (count of not 
+        cancelled sales) previous to his last activity registered
+      type: string
+    - name: longevity
+      description: '{{ doc("longevity") }}'
+    - name: total_sales
+      description: > 
+        User total count of sales. DISCLAIMER: this count is taken 
+        from delivery notes source. This source was deployed on production 
+        first january 2019. Data before this date is not available 
+        right now
+      type: integer
+    - name: avg_sales_per_day
+      description: Average number of sales per day (`total_sales / longevity`)
+    - name: urs.min_days_btwn_sales
+    - name: urs.frst_quartile_days_btwn_sales
+      description: > 
+        First quartile of days (a day is counted when 24 h have passed 
+        between consequent sales, less h are counted as 0 days) between 
+        sold labels not cancelled for user
+      type: integer
+    - name: avg_days_btwn_sales
+      description: > 
+        Average days (a day is counted when 24 h have passed between 
+        consequent sales, less h are counted as 0 days) between sold 
+        labels not cancelled and user
+      type: integer
+    - name: median_days_btwn_sales
+      description: > 
+        Median of days (a day is counted when 24 h have passed 
+        between consequent sales, less h are counted as 0 days) between 
+        sold labels not cancelled for user
+      type: integer
+    - name: urs.thrd_quartile_days_btwn_sales
+      description: > 
+        Third quartile of days (a day is counted when 24 h have passed 
+        between consequent sales, less h are counted as 0 days) between 
+        sold labels not cancelled for user
+      type: integer
+    - name: max_days_btwn_sales
+      description: > 
+        Maximum days (a day is counted when 24 h have passed between 
+        consequent sales, less h are counted as 0 days) between sold 
+        labels not cancelled for user
+      type: integer
+    - name: min_days_btwn_sale_date
+      description: > 
+        Minimum days (a day is counted when 24 h have passed between 
+        consequent sales, less h are counted as 0 days) between sold 
+        labels not cancelled for user
+      type: integer
+    - name: fst_quartile_days_btwn_sale_date
+      description: > 
+        First quartile of days passed between sold label dates not 
+        cancelled for user. Same day sold labels are counted as 1 sale in 
+        this case
+      type: integer
+    - name: avg_days_btwn_sale_date
+      description: > 
+        Average days passed between sold label dates not cancelled 
+        for user. Same day sold labels are counted as 1 sale in 
+        this case
+      type: integer
+    - name: median_days_btwn_sale_date
+      description: > 
+        Median of days passed between sold label dates not 
+        cancelled for user. Same day sold labels are counted as 1 sale in 
+        this case
+      type: integer
+    - name: thrd_quartile_days_btwn_sale_date
+      description: > 
+        Third quartile of days passed between sold label dates not 
+        cancelled for user. Same day sold labels are counted as 1 sale in 
+        this case
+      type: integer
+    - name: frequency
+      description: Days between last purchase date and corresponding date.
+      type: integer
+    - name: recency
+      description: Days between last purchase date and corresponding date.
+      type: integer
+    - name: month_label_count
+      description: month label count of last client activity
+      type: numeric
+    - name: quarter_label_count
+      description: quarter label count of last client activity
+      type: numeric
+    - name: year_label_count
+      description:  year label count of last client activity
+      type: numeric
+    - name: previous_year_label_count
+      description:  year label count year before last client activity
+      type: numeric
+    - name: historic_label_count
+      description: total label count of client
+      type: numeric
+    - name: month_revenue_eur
+      description: month revenue of last client activity
+      type: numeric
+    - name: quarter_revenue_eur
+      description: quarter revenue of last client activity
+      type: numeric
+    - name: year_revenue_eur
+      description: year revenue of last client activity
+      type: numeric
+    - name: previous_year_revenue_eur
+      description: year revenue year before last client activity
+      type: numeric
+    - name: historic_revenue_eur
+      description: total revenue of client
+      type: numeric
+    - name: month_average_order_value
+      description:  month average order value of last client activity
+      type: numeric
+    - name: quarter_aov
+      description:  quarter average order value of last client activity
+      type: numeric
+    - name: year_aov
+      description:  year average order value of last client activity
+      type: numeric
+    - name: year_plat_cntry_aov
+      description: year average order value of the platform and country of last client activity
+      type: numeric
+    - name: previous_year_aov
+      description: year average order value year before last client activity
+      type: numeric
+    - name: previous_year_plat_cntry_aov
+      description: year average order value of the platform and country year before last client activity
+      type: numeric
+    - name: historic_aov
+    - name: csat
+      description: overall customer satisfaction (`cs_tickets_good / (cs_tickets_good + cs_tickets_bad)`)
+      type: float64
+    - name: cs_tickets_good
+      description: customer service tickets where customer was satisfied
+      type: integer
+    - name: cs_tickets_offered
+      description: customer service tickets where customer was given the possibility to leave feedback but did not answer
+      type: integer
+    - name: cs_tickets_unoffered
+      description: customer service tickets where customer wasn't given the possibility to leave feedback
+      type: integer
+    - name: cs_tickets_bad
+      description: customer service tickets where customer wasn't satisfied
+      type: integer
+    - name: customer_feedback_tickets
+      description: customer service tickets where customer was given the possibility to leave feedback
+      type: integer
+    - name: total_tickets
+      description: total count customer service tickets
+      type: integer
+    - name: "churn_factor"
+      description: >
+        Ratio between recency and frequency (recency/frequency), that is, how many time has passed at the corresponding date since 
+        a user bought in comparison with their usual purchase frequency.
+      type: float
+    - name: status
+      description: >
+          Status of a user in relationship to churn [ oks | churned]
+      type: string
